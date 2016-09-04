@@ -13,10 +13,30 @@
 </head>
 <body>
     <ui-view></ui-view>
+
+
+
+
+
     <script src="script.js"></script>
 
     <script src="app/services/mainService.js"></script>
 
     <script src="app/components/mainComponent.js"></script>
+
+
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDJoJ7fFe0FHjS0TDSbLh89w6qDkSlZ6Nc",
+    authDomain: "krestiki-ca3c0.firebaseapp.com",
+    databaseURL: "https://krestiki-ca3c0.firebaseio.com",
+    storageBucket: "krestiki-ca3c0.appspot.com",
+  };
+  firebase.initializeApp(config);
+    </script>
+
+
 </body>
 </html>

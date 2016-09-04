@@ -28,5 +28,13 @@ app.component("main", {
         this.changePlayerSide = function () {
 
         }
+
+        //mainService.saveBoard(this.board).then(function (result) {
+        //    console.log(result);
+        //})
+
+        mainService.saveMove("das", "das").then(function (result) {
+            console.log(result);
+        })
     }
 })
