@@ -1,21 +1,8 @@
 ﻿angular.module("krestiki").service("mainService", function ($http) {
-    var playerId = "";
-    var boardId = "";
+    this.playerId = "";
+    this.boardId = "";
 
     var self = this;
-
-    //this.players = {
-    //    "id1": {
-    //        "name": "",
-    //        "states": [0, 1, 0, 1, 0, 0, 0, 1, 0],
-    //        "gameSide": 1
-    //    },
-    //    "id2": {
-    //        "name": "",
-    //        "states": [0, 0, 1, 0, 0, 1, 0, 0, 1],
-    //        "gameSide": 2
-    //    }
-    //}
 
     this.addPlayerToDb = function (player) {
         return $http.post('https://krestiki-ca3c0.firebaseio.com/players.json', player)

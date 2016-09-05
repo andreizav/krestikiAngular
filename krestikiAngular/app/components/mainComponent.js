@@ -2,11 +2,12 @@
 
 app.component("main", {
     templateUrl: "app/templates/main.html",
-    controller: function (mainService) {
+    controller: function (mainService,$scope) {
         this.winState = [7, 73, 273, 146, 292, 84, 56, 448];
-        this.playerStates = [0, 0, 1, 0, 1, 0, 0, 0, 0];
+        this.playerStates = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+        this.secondPlayerStates = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         this.board = {
-            "boardStates": [0, 1, 0, 1, 0, 1, 0, 0, 1]
+            "boardStates": [0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
         this.allBoards = [];
         this.player = {
@@ -15,8 +16,19 @@ app.component("main", {
 
         var self = this;
 
+        firebase.database().ref('/boards/' + mainService.boardId + '/boardStates').on('child_changed', function (data) {
+            console.log(data.key)
+            console.log(data.val().boardStates)
+            self.board.boardStates = data.val().boardStates
+            self.updateSecondPlayerStates();
+            if (self.checkIfWin(self.secondPlayerStates)) {
+                alert("you lose");
+            }
+            $scope.$digest();
+        })
+
         this.init = (function () {
-            //set player to db and save here id in mainService must be event on login
+            //set player to db and save here id in mainService - must be event on login
             mainService.addPlayerToDb(self.player).then(function (result) {
                 self.createNewBoard();//this must be event on button create
             });
@@ -46,11 +58,12 @@ app.component("main", {
             self.board.boardStates[index] = 1;          
 
             if (!this.checkIfWin(self.playerStates)) {
-                mainService.updateBoardInDb(self.board);
                 self.changePlayerSide();
             } else {
                 setTimeout(() => { alert("you win") }, 100)
             }
+
+            mainService.updateBoardInDb(self.board);
         }
 
         this.checkIfWin = function (states) {
@@ -59,6 +72,14 @@ app.component("main", {
 
         this.changePlayerSide = function () {
 
+        }
+
+        this.updateSecondPlayerStates = function(){
+            self.board.boardStates.forEach(function(item, i) {
+                if(item == 1 && self.playerStates[i] == 0){
+                    self.secondPlayerStates[i] = 1;
+                }
+            });
         }
 
         //this.getRandomSide = function (min, max) {
