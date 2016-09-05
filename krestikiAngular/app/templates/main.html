@@ -10,8 +10,8 @@
                     <div class="col-md-12">
                         <div class="box col-md-8 col-md-offset-2">
                             <div class="square col-md-4" ng-repeat="state in $ctrl.board.boardStates track by $index" ng-click="$ctrl.addState(state,$index)">
-                                <span ng-if="state === 1">x</span>
-                                <span ng-if="state === 2">o</span>
+                                <span ng-if="$ctrl.playerStates[$index] == 1">o</span>
+                                <span ng-if="$ctrl.playerStates[$index] != 1 && state == 1">x</span>
                             </div>                          
                         </div>
                     </div>

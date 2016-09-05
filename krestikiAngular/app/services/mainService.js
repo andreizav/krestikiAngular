@@ -1,26 +1,78 @@
 ﻿angular.module("krestiki").service("mainService", function ($http) {
+    var playerId = "";
+    var boardId = "";
 
+    var self = this;
 
+    //this.players = {
+    //    "id1": {
+    //        "name": "",
+    //        "states": [0, 1, 0, 1, 0, 0, 0, 1, 0],
+    //        "gameSide": 1
+    //    },
+    //    "id2": {
+    //        "name": "",
+    //        "states": [0, 0, 1, 0, 0, 1, 0, 0, 1],
+    //        "gameSide": 2
+    //    }
+    //}
 
-    this.board = {
-        "boardId": "",
-        "boardStates": [0, 1, 2, 1, 0, 2, 0, 1, 2],
-        "winState": [7, 73, 273, 146, 292, 84, 56, 448],
-        "players": [] // array of players id
+    this.addPlayerToDb = function (player) {
+        return $http.post('https://krestiki-ca3c0.firebaseio.com/players.json', player)
+        .then(function (response) {
+            playerId = response.data.name;
+        });
     }
 
-    this.players = {
-        "id1": {
-            "name": "",
-            "states": [0, 1, 0, 1, 0, 0, 0, 1, 0],
-            "gameSide": 1
-        },
-        "id2": {
-            "name": "",
-            "states": [0, 0, 1, 0, 0, 1, 0, 0, 1],
-            "gameSide": 2
-        }
+    this.getAllBoards = function () {
+        return $http.get('https://krestiki-ca3c0.firebaseio.com/boards.json')
+        .then(function (response) {
+            return response.data;
+        });
     }
+
+    this.removePlayerFromDb = function () {
+
+    }
+
+    this.updatePlayerInDb = function (player) {
+        return $http.put('https://krestiki-ca3c0.firebaseio.com/players/' + playerId + '.json', player)
+            .then(function (response) {
+                return response.data;
+            });
+    }
+
+    this.addBoardToDb = function (board) {
+        return $http.post('https://krestiki-ca3c0.firebaseio.com/boards.json', board)
+            .then(function (response) {
+                boardId =  response.data.name;
+            });
+    }
+
+    this.removeBoardFromDb = function () {
+
+    }
+
+    this.updateBoardInDb = function (board) {
+        return $http.put('https://krestiki-ca3c0.firebaseio.com/boards/' + boardId + '.json', board)
+            .then(function (response) {
+                return response.data;
+            });
+    }
+
+    this.addPlayerToBoard = function () {
+
+    }
+
+    this.removePlayerFromBoard = function () {
+
+    }
+
+    this.connectToBoard = function () {
+
+    }
+
+
 
     //firebase.database().ref('/boards').on('value', function (snapshot) {
     //    console.log(snapshot.key)
@@ -67,7 +119,7 @@
     //}
 
     this.saveMove = function (id, move) {
-        return firebase.database().ref('boards/zcxv').set([1,2,3])
+        return firebase.database().ref('boards/zcxv').set([1, 2, 3])
 
         //return $http.put('https://krestiki-ca3c0.firebaseio.com/krestiki-ca3c0/boards/zcxv', {
         //    data:"1"
