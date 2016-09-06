@@ -1,6 +1,6 @@
 ﻿angular.module("krestiki").service("mainService", function ($http) {
-    var playerId = "";
-    var boardId = "";
+    this.playerId = "";
+    this.boardId = "";
 
     var self = this;
 
