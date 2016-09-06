@@ -6,20 +6,16 @@ app.component("main", {
         this.winState = [7, 73, 273, 146, 292, 84, 56, 448];
         this.playerStates = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         this.secondPlayerStates = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-        this.board = {
-            "boardStates": [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        }
+        this.board = {};
         this.allBoards = [];
-        this.player = {
-            "name": "Andrey"
-        }
+        this.player = {}
 
         var self = this;
 
-        firebase.database().ref('/boards/' + mainService.boardId + '/boardStates').on('child_changed', function (data) {
+        firebase.database().ref('/boards/' + mainService.boardId).on('child_changed', function (data) {
             console.log(data.key)
-            console.log(data.val().boardStates)
-            self.board.boardStates = data.val().boardStates
+            console.log(data.val())
+            self.board = data.val()
             self.updateSecondPlayerStates();
             if (self.checkIfWin(self.secondPlayerStates)) {
                 alert("you lose");
@@ -29,33 +25,67 @@ app.component("main", {
 
         this.init = (function () {
             //set player to db and save here id in mainService - must be event on login
-            mainService.addPlayerToDb(self.player).then(function (result) {
-                self.createNewBoard();//this must be event on button create
-            });
+
 
             //get current boards from db
             mainService.getAllBoards().then(function (result) {
                 self.allBoards = result;
+                console.log(self.allBoards);
             })
         })();
 
         //mainService.init();
 
+        this.createNewPlayer = function () {
+            self.player = {
+                "name": "Andrey",
+                "turnNum": 0
+            }
+
+            mainService.addPlayerToDb(self.player).then(function (result) {
+                //self.createNewBoard();//this must be event on button create
+            });
+        }
+
         this.createNewBoard = function () {
+            self.player.turnNum = 1;
+            self.board = {
+                "boardStates": [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "startIndication": self.getRandomSide(1, 2)
+            }
+            //self.board.startIndication = self.getRandomSide(1, 2);
             mainService.addBoardToDb(self.board).then(function (result) {
-                //self.player.gameSide = self.getRandomSide(1, 2);
+                console.log("addBoardToDb")
+                console.log(result)
                 mainService.updatePlayerInDb(self.player);
             });
         }
 
+        this.connectToBoard = function (id) {
+            console.log("id board to connect" + id);
+            self.player.turnNum = 2;
+            mainService.getBoardFromDb(id).then(function (result) {
+                self.board = result;
+                console.log(result)
+                mainService.boardId = id;
+                mainService.updatePlayerInDb(self.player);
+                //$scope.$digest();
+            });
+        }
+
         this.addState = function (state, index) {
+            //console.log(mainService.boardId);
             if (state != 0) {
                 alert("not posible");
+                return
+            } else if (self.board.startIndication != self.player.turnNum) {
+                alert("not your turn");
                 return
             }
 
             self.playerStates[index] = 1;
-            self.board.boardStates[index] = 1;          
+            self.board.boardStates[index] = 1;
+            self.board.startIndication = self.board.startIndication == 1 ? 2 : 1;
 
             if (!this.checkIfWin(self.playerStates)) {
                 self.changePlayerSide();
@@ -82,11 +112,11 @@ app.component("main", {
             });
         }
 
-        //this.getRandomSide = function (min, max) {
-        //    var rand = min + Math.random() * (max - min)
-        //    rand = Math.round(rand);
-        //    return rand;
-        //}
+        this.getRandomSide = function (min, max) {
+            var rand = min + Math.random() * (max - min)
+            rand = Math.round(rand);
+            return rand;
+        }
 
 
 

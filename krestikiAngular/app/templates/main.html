@@ -5,6 +5,8 @@
             <div class="panel panel-info ">
                 <div class="panel-heading">
                     <h2 class="text-uppercase text-center"> krestiki - noliki</h2>
+                    <button type="button" class="btn btn-info" ng-click="$ctrl.createNewBoard()">create board</button>
+                    <button type="button" class="btn btn-info" ng-click="$ctrl.createNewPlayer()">create player</button>
                 </div>
                 <div class="panel-body">
                     <div class="col-md-12">
@@ -15,6 +17,9 @@
                             </div>                          
                         </div>
                     </div>
+                </div>
+                <div class="list-group">
+                    <button type="button" ng-repeat="(key,board) in $ctrl.allBoards" ng-click="$ctrl.connectToBoard(key)" class="list-group-item">connect to board: {{key}}</button>
                 </div>
             </div>
         </div>

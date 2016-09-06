@@ -7,7 +7,7 @@
     this.addPlayerToDb = function (player) {
         return $http.post('https://krestiki-ca3c0.firebaseio.com/players.json', player)
         .then(function (response) {
-            playerId = response.data.name;
+            self.playerId = response.data.name;
         });
     }
 
@@ -23,7 +23,8 @@
     }
 
     this.updatePlayerInDb = function (player) {
-        return $http.put('https://krestiki-ca3c0.firebaseio.com/players/' + playerId + '.json', player)
+
+        return $http.put('https://krestiki-ca3c0.firebaseio.com/players/' + self.playerId + '.json', player)
             .then(function (response) {
                 return response.data;
             });
@@ -32,8 +33,15 @@
     this.addBoardToDb = function (board) {
         return $http.post('https://krestiki-ca3c0.firebaseio.com/boards.json', board)
             .then(function (response) {
-                boardId =  response.data.name;
+                self.boardId =  response.data.name;
             });
+    }
+
+    this.getBoardFromDb = function (id) {
+        return $http.get('https://krestiki-ca3c0.firebaseio.com/boards/'+id+'.json')
+        .then(function (response) {
+            return response.data;
+        });
     }
 
     this.removeBoardFromDb = function () {
@@ -41,7 +49,7 @@
     }
 
     this.updateBoardInDb = function (board) {
-        return $http.put('https://krestiki-ca3c0.firebaseio.com/boards/' + boardId + '.json', board)
+        return $http.put('https://krestiki-ca3c0.firebaseio.com/boards/' + self.boardId + '.json', board)
             .then(function (response) {
                 return response.data;
             });
@@ -55,9 +63,7 @@
 
     }
 
-    this.connectToBoard = function () {
 
-    }
 
 
 
