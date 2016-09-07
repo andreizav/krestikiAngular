@@ -71,10 +71,10 @@
     //    console.log(snapshot.key)
     //})
 
-    firebase.database().ref('/boards').on('child_removed', function (data) {
-        console.log(data.key)
-        console.log(data.val())
-    })
+    //firebase.database().ref('/boards').on('child_removed', function (data) {
+    //    console.log(data.key)
+    //    console.log(data.val())
+    //})
 
     //var starCountRef = firebase.database().ref();
     //starCountRef.on('value', function (snapshot) {

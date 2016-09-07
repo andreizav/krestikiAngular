@@ -23,10 +23,14 @@ app.component("main", {
             $scope.$digest();
         })
 
+        firebase.database().ref('/boards/').on('child_added', function (data) {
+            mainService.getAllBoards().then(function (result) {
+                self.allBoards = result;
+                console.log(self.allBoards);
+            })
+        })
+
         this.init = (function () {
-            //set player to db and save here id in mainService - must be event on login
-
-
             //get current boards from db
             mainService.getAllBoards().then(function (result) {
                 self.allBoards = result;
@@ -34,17 +38,13 @@ app.component("main", {
             })
         })();
 
-        //mainService.init();
-
         this.createNewPlayer = function () {
             self.player = {
                 "name": "Andrey",
                 "turnNum": 0
             }
 
-            mainService.addPlayerToDb(self.player).then(function (result) {
-                //self.createNewBoard();//this must be event on button create
-            });
+            mainService.addPlayerToDb(self.player);
         }
 
         this.createNewBoard = function () {
@@ -53,7 +53,7 @@ app.component("main", {
                 "boardStates": [0, 0, 0, 0, 0, 0, 0, 0, 0],
                 "startIndication": self.getRandomSide(1, 2)
             }
-            //self.board.startIndication = self.getRandomSide(1, 2);
+
             mainService.addBoardToDb(self.board).then(function (result) {
                 console.log("addBoardToDb")
                 console.log(result)
@@ -69,12 +69,10 @@ app.component("main", {
                 console.log(result)
                 mainService.boardId = id;
                 mainService.updatePlayerInDb(self.player);
-                //$scope.$digest();
             });
         }
 
         this.addState = function (state, index) {
-            //console.log(mainService.boardId);
             if (state != 0) {
                 alert("not posible");
                 return
@@ -87,9 +85,7 @@ app.component("main", {
             self.board.boardStates[index] = 1;
             self.board.startIndication = self.board.startIndication == 1 ? 2 : 1;
 
-            if (!this.checkIfWin(self.playerStates)) {
-                self.changePlayerSide();
-            } else {
+            if (this.checkIfWin(self.playerStates)) {
                 setTimeout(() => { alert("you win") }, 100)
             }
 
@@ -98,10 +94,6 @@ app.component("main", {
 
         this.checkIfWin = function (states) {
             return self.winState.includes(parseInt(states.join(""), 2));
-        }
-
-        this.changePlayerSide = function () {
-
         }
 
         this.updateSecondPlayerStates = function(){
